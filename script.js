@@ -16,7 +16,7 @@ fireworkSound.volume = 0.5;
 // เพลง background
 const bgMusic = document.getElementById("bgMusic");
 const volumeControl = document.getElementById("volume");
-
+bgMusic.volume = 0.2;
 // ปรับเสียงด้วย slider
 volumeControl.addEventListener("input", () => {
   bgMusic.volume = volumeControl.value;
@@ -139,9 +139,9 @@ document.getElementById("start").addEventListener("click", () => {
 
   valentineText.querySelector("h1").style.opacity = "1";
   valentineText.querySelector("p:first-of-type").style.opacity = "1";
-  valentineText.style.animation = "bounceImage 10s infinite";
+  valentineText.style.animation = "bounceImage 5s infinite";
   cuteImage.style.animation = "bounceImage 1s infinite";
-  moon.style.animation = "bounceImage 10s infinite";
+  moon.style.animation = "bounceImage 6s infinite";
   loveMessage.style.opacity = "1";
   loveMessage.style.bottom = "50%";
   loveMessage.style.animation = "sway 1s infinite";
