@@ -1,0 +1,265 @@
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #000;
+  font-family: 'FkAmourBold', sans-serif;
+}
+@font-face { font-family: 'FkAmourBold'; src: url('font/FkAmourBold.ttf') format('truetype'); }
+h1 {
+  font-family: 'FkAmourBold', sans-serif;
+}
+p{
+    font-family: 'FkAmourBold', sans-serif;
+   
+}
+
+span{
+    font-family: 'FkAmourBold', sans-serif;
+}
+button{
+    font-family: 'FkAmourBold', sans-serif;
+}
+canvas {
+  display: block;
+}
+
+#start, #noLove {
+  position: absolute;
+  padding: 15px 30px;
+  font-size: 22px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+#start {
+  top: 55%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  background: #ff4d6d;
+  color: white;
+}
+
+#noLove {
+  top: 55%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  background: #666;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+#volume {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 120px;
+  z-index: 10;
+}
+
+/* ข้อความ "ไม่รักไม่ได้ดิน้องแพรว" */
+#message {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 36px;
+  color: #ffffff;
+  font-weight: bold;
+  background: rgb(0, 0, 0);
+  padding: 25px 25px;
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 2s ease;
+  z-index: 20;
+  
+}
+
+#loveMessage {
+  position: absolute;
+  bottom: -100px; /* เริ่มจากนอกจอด้านล่าง */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 48px;
+  font-weight: bold;
+  color: #ff4d6d;
+  opacity: 0;
+  z-index: 30;
+  transition: opacity 2s ease, bottom 2s ease;
+  white-space: nowrap; /* ไม่ให้ตัดบรรทัด */
+}
+
+/* โยกซ้ายขวา */
+@keyframes sway {
+  0%   { transform: translateX(-50%) rotate(-3deg); }
+  25%  { transform: translateX(-50%) rotate(3deg); }
+  50%  { transform: translateX(-50%) rotate(-3deg); }
+  75%  { transform: translateX(-50%) rotate(3deg); }
+  100% { transform: translateX(-50%) rotate(-3deg); }
+}
+
+/* เล็กลงหมุนหาย */
+@keyframes shrinkRotate {
+  0%   { transform: translateX(-50%) scale(1) rotate(0deg); opacity: 1; }
+  50%  { transform: translateX(-50%) scale(0.6) rotate(180deg); opacity: 0.7; }
+  100% { transform: translateX(-50%) scale(0) rotate(360deg); opacity: 0; }
+}
+
+/* วิ่งผ่านจากขวาไปซ้าย */
+@keyframes driveAcross {
+  0%   { left: 110%; opacity: 1; transform: none; }
+  50%  { left: 50%; opacity: 1; transform: none; }
+  100% { left: -100%; opacity: 0; transform: none; }
+}
+
+
+
+#valentineText {
+  position: absolute;
+  top: 10%; /* เปลี่ยนจาก 20% เป็น 10% */
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #ff4d6d;
+  font-family: "Arial", sans-serif;
+  z-index: 15;
+}
+#question {
+  font-size: 60px; /* หรือ 72px ก็ได้ */
+  font-weight: bold;
+  margin-top: 10px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* เพิ่มเงาให้ดูเด่นขึ้น */
+}
+#valentineText h1 {
+  font-size: 35px;
+  margin-top: 10px;
+  opacity: 0; /* ซ่อนไว้ก่อน */
+  transition: opacity 2s ease;
+}
+
+#valentineText p:first-of-type {
+  font-size: 28px;
+  margin-top: 10px;
+  opacity: 0; /* ซ่อนไว้ก่อน */
+  transition: opacity 2s ease;
+}
+
+#cuteImage {
+  position: absolute;
+  top: 60%;   /* อยู่ใต้ปุ่ม */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;   /* ขนาดรูป */
+  height: auto;
+  z-index: 5;
+  opacity: 0;
+}
+#moon {
+  position: absolute;
+  top: 5%;   /* อยู่ใต้ปุ่ม */
+  left: 10%;
+  transform: translateX(-50%);
+  width: 50px;   /* ขนาดรูป */
+  height: auto;
+  z-index: 5;
+  opacity: 0;
+  
+}
+
+@keyframes comeFromLeft {
+  0%   { left: -100%; opacity: 0; transform: none; }
+  50%  { left: 25%; opacity: 1; transform: none; }
+  100% { left: 50%; opacity: 1; transform: translateX(-50%); }
+}
+
+/* เด้งขึ้นลง */
+@keyframes bounceImage {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(-20px); }
+}
+.heart {
+  position: absolute;
+  width: 120px;
+  aspect-ratio: 1;
+  background: pink;
+  clip-path: shape(
+    from 50% 91%,
+    line to 90% 50%,
+    arc to 50% 9% of 1%,
+    arc to 10% 50% of 1%
+  );
+  opacity: 0.8;
+  z-index: 2;
+  transition: left 12s ease-out, top 12s ease-out; /* เปลี่ยนจาก 6s เป็น 12s */
+
+  animation: floatBubble 30s infinite ease-in-out; /* เปลี่ยนจาก 15s เป็น 30s */
+}
+
+.heart:nth-child(2) {
+  background: red;
+  animation-delay: 7s;
+}
+
+@keyframes floatBubble {
+  0%   { transform: translate(0, 0) scale(1); }
+  25%  { transform: translate(80px, -150px) scale(1.05); }
+  50%  { transform: translate(-60px, -300px) scale(0.95); }
+  75%  { transform: translate(100px, -450px) scale(1.1); }
+  100% { transform: translate(0, -600px) scale(1); }
+}
+
+/* ดาวระยิบระยับ */
+.star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff4d6d;
+  z-index: 1;
+  /* ลบ opacity และ transition ออก */
+}
+
+/* เพิ่ม class สำหรับเฟดเข้า */
+.star.show {
+  animation: fadeInTwinkle 1s ease-in forwards, twinkle 2s infinite ease-in-out 1s;
+}
+
+@keyframes fadeInTwinkle {
+  0% { opacity: 0; transform: scale(0); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+/* ดาวขนาดต่างๆ */
+.star.big {
+  width: 5px;
+  height: 5px;
+}
+
+.star.big.show {
+  animation: fadeInTwinkle 1s ease-in forwards, twinkle 3s infinite ease-in-out 1s;
+}
+
+.star.medium {
+  width: 4px;
+  height: 4px;
+}
+
+.star.medium.show {
+  animation: fadeInTwinkle 1s ease-in forwards, twinkle 2.5s infinite ease-in-out 1s;
+}
+
+
+
+
+
+
+
+
