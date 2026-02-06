@@ -151,6 +151,7 @@ canvas {
   margin-top: 10px;
   opacity: 0;
   transition: opacity 2s ease;
+  /* ไม่มีเรืองแสงตอนแรก */
 }
 
 #valentineText p:first-of-type {
@@ -158,6 +159,44 @@ canvas {
   margin-top: 10px;
   opacity: 0;
   transition: opacity 2s ease;
+  /* ไม่มีเรืองแสงตอนแรก */
+}
+
+/* เพิ่ม class สำหรับเรืองแสง - เริ่มหลังกดปุ่ม */
+/* เพิ่ม class สำหรับเรืองแสง - ลดความสว่างและความฟุ้งลง */
+/* เพิ่ม class สำหรับเรืองแสง - เพิ่มความสว่างขึ้นนิด */
+#valentineText h1.glowing {
+  text-shadow: 
+    0 0 4px rgba(255, 255, 255, 0.4),
+    0 0 8px rgba(255, 255, 255, 0.3),
+    0 0 12px rgba(135, 206, 235, 0.2);
+  animation: textGlow 2.5s ease-in-out infinite;
+}
+
+#valentineText p:first-of-type.glowing {
+  text-shadow: 
+    0 0 4px rgba(255, 255, 255, 0.4),
+    0 0 8px rgba(255, 255, 255, 0.3),
+    0 0 12px rgba(135, 206, 235, 0.2);
+  animation: textGlow 2.5s ease-in-out infinite 0.5s;
+}
+
+/* Animation เรืองแสงกระพริบ */
+@keyframes textGlow {
+  0%, 100% {
+    text-shadow: 
+      0 0 4px rgba(255, 255, 255, 0.4),
+      0 0 8px rgba(255, 255, 255, 0.3),
+      0 0 12px rgba(135, 206, 235, 0.2);
+    opacity: 1;
+  }
+  50% {
+    text-shadow: 
+      0 0 2px rgba(255, 255, 255, 0.25),
+      0 0 5px rgba(255, 255, 255, 0.2),
+      0 0 8px rgba(135, 206, 235, 0.15);
+    opacity: 0.9;
+  }
 }
 
 #cuteImage {
@@ -466,5 +505,477 @@ canvas {
       rotateX(var(--rotate-x, 360deg)) 
       rotateY(var(--rotate-y, 360deg)) 
       rotateZ(var(--rotate-z, 360deg));
+  }
+}
+
+/* ดาวเคราะห์ 3D */
+/* ดาวเคราะห์ 3D */
+.planet {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  opacity: 0;
+  z-index: 4;
+  transform-style: preserve-3d;
+  box-shadow: 
+    inset -20px -20px 40px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(255, 255, 255, 0.3);
+}
+
+.planet::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 30%;
+  height: 30%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), transparent);
+  border-radius: 50%;
+}
+
+/* วงแหวนดาวเสาร์ */
+.planet.saturn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 180%;
+  height: 30%;
+  background: 
+    linear-gradient(to bottom, 
+      transparent 0%, 
+      rgba(200, 150, 100, 0.4) 20%,
+      rgba(200, 150, 100, 0.6) 50%,
+      rgba(200, 150, 100, 0.4) 80%,
+      transparent 100%
+    );
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotateX(75deg);
+  transform-style: preserve-3d;
+}
+
+@keyframes planetFloat {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    left: var(--end-left);
+    top: var(--end-top);
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+/* ดาวตก/ดาวหาง - แบบเส้นลากยาว (เล็กลง) */
+.shooting-star {
+  position: absolute;
+  width: 80px; /* ลดจาก 150px เป็น 80px */
+  height: 2px; /* ลดจาก 3px เป็น 2px */
+  z-index: 0;
+  opacity: 0;
+  transform-origin: left center;
+}
+
+.shooting-star::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, 
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 1));
+  border-radius: 50%;
+  box-shadow: 
+    0 0 10px 2px rgba(255, 255, 255, 0.8),
+    0 0 18px 4px rgba(255, 255, 255, 0.5),
+    0 0 25px 6px rgba(255, 200, 200, 0.3);
+  filter: blur(0.5px);
+}
+
+.shooting-star::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  width: 5px; /* ลดจาก 8px เป็น 5px */
+  height: 5px;
+  background: radial-gradient(circle, 
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.8) 40%,
+    rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 12px 3px rgba(255, 255, 255, 1),
+    0 0 20px 6px rgba(255, 255, 255, 0.7);
+}
+
+/* สีชมพู - ไฟแดง-ชมพู */
+.shooting-star.pastel-pink::before {
+  background: linear-gradient(to right, 
+    rgba(255, 50, 100, 0),
+    rgba(255, 100, 150, 0.4),
+    rgba(255, 150, 180, 0.8),
+    rgba(255, 100, 150, 1));
+  box-shadow: 
+    0 0 12px 2px rgba(255, 100, 150, 0.9),
+    0 0 22px 5px rgba(255, 50, 100, 0.7),
+    0 0 35px 8px rgba(200, 0, 100, 0.5);
+  animation: firePink 0.15s infinite;
+}
+
+.shooting-star.pastel-pink::after {
+  background: radial-gradient(circle, 
+    rgba(255, 100, 150, 1) 0%,
+    rgba(255, 150, 180, 0.9) 40%,
+    rgba(255, 50, 100, 0) 70%);
+  box-shadow: 
+    0 0 15px 4px rgba(255, 100, 150, 1),
+    0 0 25px 8px rgba(255, 50, 100, 0.8);
+}
+
+/* สีฟ้า - ไฟฟ้า-ขาว */
+.shooting-star.pastel-blue::before {
+  background: linear-gradient(to right, 
+    rgba(100, 150, 255, 0),
+    rgba(150, 200, 255, 0.4),
+    rgba(173, 216, 230, 0.8),
+    rgba(150, 200, 255, 1));
+  box-shadow: 
+    0 0 12px 2px rgba(150, 200, 255, 0.9),
+    0 0 22px 5px rgba(100, 150, 255, 0.7),
+    0 0 35px 8px rgba(50, 100, 200, 0.5);
+  animation: fireBlue 0.15s infinite;
+}
+
+.shooting-star.pastel-blue::after {
+  background: radial-gradient(circle, 
+    rgba(150, 200, 255, 1) 0%,
+    rgba(173, 216, 230, 0.9) 40%,
+    rgba(100, 150, 255, 0) 70%);
+  box-shadow: 
+    0 0 15px 4px rgba(150, 200, 255, 1),
+    0 0 25px 8px rgba(100, 150, 255, 0.8);
+}
+
+/* สีม่วง - ไฟม่วง-ชมพู */
+.shooting-star.pastel-purple::before {
+  background: linear-gradient(to right, 
+    rgba(150, 0, 200, 0),
+    rgba(200, 100, 255, 0.4),
+    rgba(221, 160, 221, 0.8),
+    rgba(200, 100, 255, 1));
+  box-shadow: 
+    0 0 12px 2px rgba(200, 100, 255, 0.9),
+    0 0 22px 5px rgba(180, 50, 255, 0.7),
+    0 0 35px 8px rgba(150, 0, 200, 0.5);
+  animation: firePurple 0.15s infinite;
+}
+
+.shooting-star.pastel-purple::after {
+  background: radial-gradient(circle, 
+    rgba(200, 100, 255, 1) 0%,
+    rgba(221, 160, 221, 0.9) 40%,
+    rgba(180, 50, 255, 0) 70%);
+  box-shadow: 
+    0 0 15px 4px rgba(200, 100, 255, 1),
+    0 0 25px 8px rgba(180, 50, 255, 0.8);
+}
+
+/* สีทอง - ไฟเหลือง-ส้ม */
+.shooting-star.gold::before {
+  background: linear-gradient(to right, 
+    rgba(200, 100, 0, 0),
+    rgba(255, 200, 0, 0.4),
+    rgba(255, 215, 0, 0.8),
+    rgba(255, 200, 0, 1));
+  box-shadow: 
+    0 0 12px 2px rgba(255, 200, 0, 0.9),
+    0 0 22px 5px rgba(255, 150, 0, 0.7),
+    0 0 35px 8px rgba(200, 100, 0, 0.5);
+  animation: fireGold 0.15s infinite;
+}
+
+.shooting-star.gold::after {
+  background: radial-gradient(circle, 
+    rgba(255, 200, 0, 1) 0%,
+    rgba(255, 215, 0, 0.9) 40%,
+    rgba(255, 150, 0, 0) 70%);
+  box-shadow: 
+    0 0 15px 4px rgba(255, 200, 0, 1),
+    0 0 25px 8px rgba(255, 150, 0, 0.8);
+}
+
+/* Animation ไฟกระพริบ */
+@keyframes firePink {
+  0%, 100% {
+    box-shadow: 
+      0 0 12px 2px rgba(255, 100, 150, 0.9),
+      0 0 22px 5px rgba(255, 50, 100, 0.7),
+      0 0 35px 8px rgba(200, 0, 100, 0.5);
+  }
+  50% {
+    box-shadow: 
+      0 0 15px 3px rgba(255, 100, 150, 1),
+      0 0 25px 6px rgba(255, 50, 100, 0.9),
+      0 0 40px 10px rgba(200, 0, 100, 0.7);
+  }
+}
+
+@keyframes fireBlue {
+  0%, 100% {
+    box-shadow: 
+      0 0 12px 2px rgba(150, 200, 255, 0.9),
+      0 0 22px 5px rgba(100, 150, 255, 0.7),
+      0 0 35px 8px rgba(50, 100, 200, 0.5);
+  }
+  50% {
+    box-shadow: 
+      0 0 15px 3px rgba(150, 200, 255, 1),
+      0 0 25px 6px rgba(100, 150, 255, 0.9),
+      0 0 40px 10px rgba(50, 100, 200, 0.7);
+  }
+}
+
+@keyframes firePurple {
+  0%, 100% {
+    box-shadow: 
+      0 0 12px 2px rgba(200, 100, 255, 0.9),
+      0 0 22px 5px rgba(180, 50, 255, 0.7),
+      0 0 35px 8px rgba(150, 0, 200, 0.5);
+  }
+  50% {
+    box-shadow: 
+      0 0 15px 3px rgba(200, 100, 255, 1),
+      0 0 25px 6px rgba(180, 50, 255, 0.9),
+      0 0 40px 10px rgba(150, 0, 200, 0.7);
+  }
+}
+
+@keyframes fireGold {
+  0%, 100% {
+    box-shadow: 
+      0 0 12px 2px rgba(255, 200, 0, 0.9),
+      0 0 22px 5px rgba(255, 150, 0, 0.7),
+      0 0 35px 8px rgba(200, 100, 0, 0.5);
+  }
+  50% {
+    box-shadow: 
+      0 0 15px 3px rgba(255, 200, 0, 1),
+      0 0 25px 6px rgba(255, 150, 0, 0.9),
+      0 0 40px 10px rgba(200, 100, 0, 0.7);
+  }
+}
+
+.shooting-star.gold::after {
+  background: radial-gradient(circle, 
+    rgba(255, 200, 0, 1) 0%,
+    rgba(255, 215, 0, 0.9) 40%,
+    rgba(255, 150, 0, 0) 70%);
+  box-shadow: 
+    0 0 25px 6px rgba(255, 200, 0, 1),
+    0 0 40px 12px rgba(255, 150, 0, 0.9);
+}
+
+/* Animation ไฟกระพริบ */
+@keyframes firePink {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px 4px rgba(255, 100, 150, 1),
+      0 0 35px 8px rgba(255, 50, 100, 0.9),
+      0 0 50px 12px rgba(200, 0, 100, 0.7);
+  }
+  50% {
+    box-shadow: 
+      0 0 25px 5px rgba(255, 100, 150, 1),
+      0 0 40px 10px rgba(255, 50, 100, 1),
+      0 0 55px 15px rgba(200, 0, 100, 0.8);
+  }
+}
+
+@keyframes fireBlue {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px 4px rgba(150, 200, 255, 1),
+      0 0 35px 8px rgba(100, 150, 255, 0.9),
+      0 0 50px 12px rgba(50, 100, 200, 0.7);
+  }
+  50% {
+    box-shadow: 
+      0 0 25px 5px rgba(150, 200, 255, 1),
+      0 0 40px 10px rgba(100, 150, 255, 1),
+      0 0 55px 15px rgba(50, 100, 200, 0.8);
+  }
+}
+
+@keyframes firePurple {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px 4px rgba(200, 100, 255, 1),
+      0 0 35px 8px rgba(180, 50, 255, 0.9),
+      0 0 50px 12px rgba(150, 0, 200, 0.7);
+  }
+  50% {
+    box-shadow: 
+      0 0 25px 5px rgba(200, 100, 255, 1),
+      0 0 40px 10px rgba(180, 50, 255, 1),
+      0 0 55px 15px rgba(150, 0, 200, 0.8);
+  }
+}
+
+@keyframes fireGold {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px 4px rgba(255, 200, 0, 1),
+      0 0 35px 8px rgba(255, 150, 0, 0.9),
+      0 0 50px 12px rgba(200, 100, 0, 0.7);
+  }
+  50% {
+    box-shadow: 
+      0 0 25px 5px rgba(255, 200, 0, 1),
+      0 0 40px 10px rgba(255, 150, 0, 1),
+      0 0 55px 15px rgba(200, 100, 0, 0.8);
+  }
+}
+
+
+
+/* แสงวิบตอนดาวตกหาย - เล็กลง */
+.star-flash {
+  position: absolute;
+  width: 15px; /* ลดจาก 30px เป็น 15px */
+  height: 15px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+}
+
+.star-flash::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, 
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.8) 30%,
+    rgba(255, 255, 255, 0) 70%);
+}
+
+.star-flash::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%; /* ลดจาก 150% */
+  height: 120%;
+  border-radius: 50%;
+  background: radial-gradient(circle, 
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.2) 40%,
+    rgba(255, 255, 255, 0) 70%);
+}
+
+/* แสงวิบสีต่างๆ */
+.star-flash.flash-pink::before {
+  background: radial-gradient(circle, 
+    rgba(255, 100, 150, 1) 0%,
+    rgba(255, 150, 180, 0.9) 30%,
+    rgba(255, 100, 150, 0) 70%);
+  box-shadow: 
+    0 0 15px 3px rgba(255, 100, 150, 1),
+    0 0 25px 6px rgba(255, 50, 100, 0.8);
+}
+
+.star-flash.flash-pink::after {
+  background: radial-gradient(circle, 
+    rgba(255, 100, 150, 0.5) 0%,
+    rgba(255, 150, 180, 0.2) 40%,
+    rgba(255, 100, 150, 0) 70%);
+}
+
+.star-flash.flash-blue::before {
+  background: radial-gradient(circle, 
+    rgba(150, 200, 255, 1) 0%,
+    rgba(173, 216, 230, 0.9) 30%,
+    rgba(150, 200, 255, 0) 70%);
+  box-shadow: 
+    0 0 15px 3px rgba(150, 200, 255, 1),
+    0 0 25px 6px rgba(100, 150, 255, 0.8);
+}
+
+.star-flash.flash-blue::after {
+  background: radial-gradient(circle, 
+    rgba(150, 200, 255, 0.5) 0%,
+    rgba(173, 216, 230, 0.2) 40%,
+    rgba(150, 200, 255, 0) 70%);
+}
+
+.star-flash.flash-purple::before {
+  background: radial-gradient(circle, 
+    rgba(200, 100, 255, 1) 0%,
+    rgba(221, 160, 221, 0.9) 30%,
+    rgba(200, 100, 255, 0) 70%);
+  box-shadow: 
+    0 0 15px 3px rgba(200, 100, 255, 1),
+    0 0 25px 6px rgba(180, 50, 255, 0.8);
+}
+
+.star-flash.flash-purple::after {
+  background: radial-gradient(circle, 
+    rgba(200, 100, 255, 0.5) 0%,
+    rgba(221, 160, 221, 0.2) 40%,
+    rgba(200, 100, 255, 0) 70%);
+}
+
+.star-flash.flash-gold::before {
+  background: radial-gradient(circle, 
+    rgba(255, 200, 0, 1) 0%,
+    rgba(255, 215, 0, 0.9) 30%,
+    rgba(255, 200, 0, 0) 70%);
+  box-shadow: 
+    0 0 15px 3px rgba(255, 200, 0, 1),
+    0 0 25px 6px rgba(255, 150, 0, 0.8);
+}
+
+.star-flash.flash-gold::after {
+  background: radial-gradient(circle, 
+    rgba(255, 200, 0, 0.5) 0%,
+    rgba(255, 215, 0, 0.2) 40%,
+    rgba(255, 200, 0, 0) 70%);
+}
+
+/* Animation แสงวิบ */
+@keyframes flashBurst {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
   }
 }

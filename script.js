@@ -116,6 +116,7 @@ function launchRocket() {
   setTimeout(launchRocket, delay);
 }
 
+
 const loveMessage = document.getElementById("loveMessage");
 const question = document.getElementById("question");
 const valentineText = document.getElementById("valentineText");
@@ -128,6 +129,8 @@ document.getElementById("start").addEventListener("click", () => {
   launchRocket();
   createStars();
   startPetalsAndLeaves();
+  startPlanets();
+  startShootingStars();
 
   document.getElementById("start").style.display = "none";
   document.getElementById("noLove").style.display = "none";
@@ -139,6 +142,10 @@ document.getElementById("start").addEventListener("click", () => {
 
   valentineText.querySelector("h1").style.opacity = "1";
   valentineText.querySelector("p:first-of-type").style.opacity = "1";
+  setTimeout(() => {
+    valentineText.querySelector("h1").classList.add("glowing");
+    valentineText.querySelector("p:first-of-type").classList.add("glowing");
+  }, 17000);
   valentineText.style.animation = "bounceImage 5s infinite";
   cuteImage.style.animation = "bounceImage 1s infinite";
   moon.style.animation = "bounceImage 6s infinite";
@@ -153,7 +160,7 @@ document.getElementById("start").addEventListener("click", () => {
   setTimeout(() => {
     loveMessage.style.animation = "driveAcross 4s linear forwards";
     loveMessage.style.opacity = "1";
-  }, 13000);
+  }, 12000);
 
   setTimeout(() => {
     loveMessage.style.animation = "comeFromLeft 2s forwards";
@@ -165,7 +172,7 @@ document.getElementById("start").addEventListener("click", () => {
       }, 1000);
       
     }, 2000);
-  }, 16000);
+  }, 15000);
 
 }, { once: true });
 
@@ -399,14 +406,14 @@ function createLeaf() {
 function startPetalsAndLeaves() {
   const interval = setInterval(() => {
     const rand = Math.random();
-    if (rand > 0.7) {
+    if (rand > 0.5) {
       createPetal(); 
-    } else if (rand > 0.45) {
+    } else if (rand > 0.25) {
       createRose(); 
     } else if (rand > 0.2) {
       createLeaf(); 
     }
-  }, 800);
+  }, 4200);
   
   /*setTimeout(() => {
     clearInterval(interval);
@@ -476,4 +483,299 @@ function startHearts() {
       createHeart();
     }, i * 800);
   }
+}
+// สร้างดาวเคราะห์ลอยผ่าน
+// เพิ่มตัวแปรเก็บประวัติดาว
+let planetHistory = [];
+
+function createPlanet() {
+  const container = document.getElementById("container");
+  const planet = document.createElement("div");
+  planet.className = "planet";
+  
+  // สุ่มดาวเคราะห์
+  const planets = [
+    { color: "linear-gradient(135deg, #f39c12, #e67e22)", class: "", name: "jupiter" },
+    { color: "linear-gradient(135deg, #3498db, #2980b9)", class: "", name: "neptune" },
+    { color: "linear-gradient(135deg, #e74c3c, #c0392b)", class: "", name: "mars" },
+    { color: "linear-gradient(135deg, #f1c40f, #f39c12)", class: "saturn", name: "saturn" },
+    { color: "linear-gradient(135deg, #9b59b6, #8e44ad)", class: "", name: "pluto" },
+  ];
+  
+  // กรองดาวที่ไม่อยู่ใน history
+  let availablePlanets = planets.filter(p => !planetHistory.includes(p.name));
+  
+  // ถ้าไม่มีดาวให้เลือก (ทุกดาวถูกใช้ไปแล้ว) ให้ reset history
+  if (availablePlanets.length === 0) {
+    planetHistory = [];
+    availablePlanets = planets;
+  }
+  
+  // สุ่มจากดาวที่ยังไม่ได้ใช้
+  const randomPlanet = availablePlanets[Math.floor(Math.random() * availablePlanets.length)];
+  
+  // เพิ่มดาวที่เลือกเข้า history
+  planetHistory.push(randomPlanet.name);
+  
+  // เก็บแค่ 2 รอบล่าสุด
+  if (planetHistory.length > 2) {
+    planetHistory.shift(); // ลบตัวแรกออก
+  }
+  
+  planet.style.background = randomPlanet.color;
+  
+  if (randomPlanet.class) {
+    planet.classList.add(randomPlanet.class);
+  }
+  
+  // สุ่มขนาด
+  const size = 80 + Math.random() * 60;
+  planet.style.width = size + "px";
+  planet.style.height = size + "px";
+  
+  // สุ่มมุมเริ่มต้น (4 มุม)
+  const corners = [
+    { // ซ้ายบน -> ขวาล่าง
+      startLeft: "-200px",
+      startTop: "-200px",
+      endLeft: "calc(100% + 200px)",
+      endTop: "calc(100% + 200px)"
+    },
+    { // ขวาบน -> ซ้ายล่าง
+      startLeft: "calc(100% + 200px)",
+      startTop: "-200px",
+      endLeft: "-200px",
+      endTop: "calc(100% + 200px)"
+    },
+    { // ซ้ายล่าง -> ขวาบน
+      startLeft: "-200px",
+      startTop: "calc(100% + 200px)",
+      endLeft: "calc(100% + 200px)",
+      endTop: "-200px"
+    },
+    { // ขวาล่าง -> ซ้ายบน
+      startLeft: "calc(100% + 200px)",
+      startTop: "calc(100% + 200px)",
+      endLeft: "-200px",
+      endTop: "-200px"
+    }
+  ];
+  
+  const corner = corners[Math.floor(Math.random() * corners.length)];
+  
+  // สุ่มความเร็ว (ช้าลง)
+  const duration = 20 + Math.random() * 15; // 20-35 วินาที
+  
+  // ตั้งค่าตำแหน่งเริ่มต้น
+  planet.style.left = corner.startLeft;
+  planet.style.top = corner.startTop;
+  
+  container.appendChild(planet);
+  
+  // ใช้ Web Animations API
+  planet.animate([
+    {
+      left: corner.startLeft,
+      top: corner.startTop,
+      opacity: 0,
+      transform: "scale(0.3)"
+    },
+    {
+      opacity: 0.3,
+      transform: "scale(0.5)",
+      offset: 0.15
+    },
+    {
+      opacity: 1,
+      transform: "scale(1)",
+      offset: 0.4
+    },
+    {
+      opacity: 1,
+      transform: "scale(1)",
+      offset: 0.6
+    },
+    {
+      opacity: 0.3,
+      transform: "scale(0.5)",
+      offset: 0.85
+    },
+    {
+      left: corner.endLeft,
+      top: corner.endTop,
+      opacity: 0,
+      transform: "scale(0.3)"
+    }
+  ], {
+    duration: duration * 1000,
+    easing: "ease-in-out",
+    fill: "forwards"
+  });
+  
+  // ลบหลังจบ
+  setTimeout(() => {
+    planet.remove();
+  }, duration * 1000 + 1000);
+}
+// สร้างดาวตก/ดาวหาง - แบบเส้นลากยาว (เล็กลง)
+// สร้างดาวตก/ดาวหาง - แบบเส้นลากยาว (สุ่มทั้ง 2 ฝั่ง)
+// สร้างดาวตก/ดาวหาง - แบบเส้นลากยาว (มีแสงวิบตอนหาย)
+// สร้างดาวตก/ดาวหาง - แบบเส้นลากยาว (แสงวิบที่หัวดาว)
+function createShootingStar() {
+  const container = document.getElementById("container");
+  const star = document.createElement("div");
+  star.className = "shooting-star";
+  
+  const colors = ["pastel-pink", "pastel-blue", "pastel-purple", "gold", "", "pastel-pink", "pastel-purple"];
+  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+  if (randomColor) {
+    star.classList.add(randomColor);
+  }
+  
+  const direction = Math.random() > 0.5;
+  let startX, startY, angle;
+  
+  if (direction) {
+    startX = -5 + Math.random() * 40;
+    startY = -10 + Math.random() * 30;
+    angle = 30 + Math.random() * 35;
+  } else {
+    startX = 65 + Math.random() * 40;
+    startY = -10 + Math.random() * 30;
+    angle = 115 + Math.random() * 35;
+  }
+  
+  star.style.left = startX + "%";
+  star.style.top = startY + "%";
+  
+  const lineLength = 60 + Math.random() * 80;
+  star.style.width = lineLength + "px";
+  
+  container.appendChild(star);
+  
+  const distance = 250 + Math.random() * 350;
+  const duration = 0.7 + Math.random() * 0.6;
+  
+  // คำนวณปลายทางก่อน
+  const endX = startX + (distance * Math.cos(angle * Math.PI / 180)) / window.innerWidth * 100;
+  const endY = startY + (distance * Math.sin(angle * Math.PI / 180)) / window.innerHeight * 100;
+  
+  // คำนวณหัวดาว (บวก offset ของความยาวเส้น)
+  const headOffsetX = (lineLength * Math.cos(angle * Math.PI / 180)) / window.innerWidth * 100;
+  const headOffsetY = (lineLength * Math.sin(angle * Math.PI / 180)) / window.innerHeight * 100;
+  const headX = endX + headOffsetX;
+  const headY = endY + headOffsetY;
+  
+  star.animate([
+    {
+      left: startX + "%",
+      top: startY + "%",
+      opacity: 0,
+      transform: `rotate(${angle}deg) scaleX(0.3)`
+    },
+    {
+      opacity: 1,
+      transform: `rotate(${angle}deg) scaleX(1)`,
+      offset: 0.05
+    },
+    {
+      opacity: 1,
+      offset: 0.7
+    },
+    {
+      left: endX + "%",
+      top: endY + "%",
+      opacity: 0,
+      transform: `rotate(${angle}deg) scaleX(0.8)`
+    }
+  ], {
+    duration: duration * 1000,
+    easing: "ease-out",
+    fill: "forwards"
+  });
+  
+  setTimeout(() => {
+    createStarFlash(headX, headY, randomColor);
+  }, duration * 1000);
+  
+  setTimeout(() => {
+    star.remove();
+  }, duration * 1000 + 100);
+}
+
+// ฟังก์ชันสร้างแสงวิบ - เล็กลง
+function createStarFlash(x, y, colorClass) {
+  const container = document.getElementById("container");
+  const flash = document.createElement("div");
+  flash.className = "star-flash";
+  
+  // เพิ่มสีตามดาวตก
+  const flashColors = {
+    "pastel-pink": "flash-pink",
+    "pastel-blue": "flash-blue",
+    "pastel-purple": "flash-purple",
+    "gold": "flash-gold"
+  };
+  
+  if (colorClass && flashColors[colorClass]) {
+    flash.classList.add(flashColors[colorClass]);
+  }
+  
+  flash.style.left = x + "%";
+  flash.style.top = y + "%";
+  
+  container.appendChild(flash);
+  
+  // Animation แสงวิบ - เร็วและเล็กกว่าเดิม
+  flash.animate([
+    {
+      opacity: 0,
+      transform: "translate(-50%, -50%) scale(0.2)"
+    },
+    {
+      opacity: 1,
+      transform: "translate(-50%, -50%) scale(1)",
+      offset: 0.4
+    },
+    {
+      opacity: 0,
+      transform: "translate(-50%, -50%) scale(1.5)"
+    }
+  ], {
+    duration: 300, // 0.3 วินาที (เร็วขึ้น)
+    easing: "ease-out",
+    fill: "forwards"
+  });
+  
+  // ลบแสงวิบ
+  setTimeout(() => {
+    flash.remove();
+  }, 400);
+}
+
+// เริ่มระบบดาวตก
+function startShootingStars() {
+  // สร้างดาวตกครั้งแรก
+  setTimeout(() => {
+    createShootingStar();
+  }, 5000); // รอ 5 วินาที
+  
+  // สุ่มสร้างดาวตกทุกๆ 8-25 วินาที
+  setInterval(() => {
+    if (Math.random() > 0.3) { // 70% โอกาสเกิด
+      createShootingStar();
+      
+      // บางครั้งอาจมี 2-3 ดวงติดกัน (20% โอกาส)
+      if (Math.random() > 0.8) {
+        setTimeout(() => createShootingStar(), 300 + Math.random() * 500);
+      }
+    }
+  }, 8000 + Math.random() * 17000);
+}
+function startPlanets() {
+  createPlanet(); // สร้างดวงแรกทันที
+  
+  setInterval(() => {
+    createPlanet();
+  }, 30000 + Math.random() * 20000); // ทุกๆ 30-50 วินาที
 }
