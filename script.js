@@ -38,23 +38,23 @@ class Particle {
     this.alpha -= 0.015;
   }
   draw() {
-  if (this.alpha <= 0) return; // ถ้า alpha หมดแล้วไม่ต้องวาด
-  
-  ctx.save(); // บันทึกสถานะ canvas ก่อน
-  ctx.globalAlpha = this.alpha;
-  ctx.fillStyle = this.color;
-  ctx.beginPath();
-  const size = 6;
-  ctx.moveTo(this.x, this.y);
-  ctx.bezierCurveTo(this.x - size, this.y - size,
-                    this.x - size*2, this.y + size/2,
-                    this.x, this.y + size);
-  ctx.bezierCurveTo(this.x + size*2, this.y + size/2,
-                    this.x + size, this.y - size,
-                    this.x, this.y);
-  ctx.fill();
-  ctx.restore(); // คืนสถานะ canvas
-}
+    if (this.alpha <= 0) return;
+    
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    const size = 6;
+    ctx.moveTo(this.x, this.y);
+    ctx.bezierCurveTo(this.x - size, this.y - size,
+                      this.x - size*2, this.y + size/2,
+                      this.x, this.y + size);
+    ctx.bezierCurveTo(this.x + size*2, this.y + size/2,
+                      this.x + size, this.y - size,
+                      this.x, this.y);
+    ctx.fill();
+    ctx.restore();
+  }
 }
 
 // จรวดพลุ
@@ -82,26 +82,26 @@ class Rocket {
       ctx.fill();
     }
   }
-explode() {
-  fireworkSound.currentTime = 0;
-  fireworkSound.play().catch(err => console.log("Audio play blocked:", err));
+  explode() {
+    fireworkSound.currentTime = 0;
+    fireworkSound.play().catch(err => console.log("Audio play blocked:", err));
 
-  const scale = 10 + Math.random() * 6; // ลดขนาด
-  const colors = ["#ff4d6d","#ff99cc","#cc33ff","#9933cc","#ff0000","#cc0000"];
-  const step = 0.025 + Math.random() * 0.05; // เพิ่ม step = อนุภาคน้อยลง
+    const scale = 10 + Math.random() * 6;
+    const colors = ["#ff4d6d","#ff99cc","#cc33ff","#9933cc","#ff0000","#cc0000"];
+    const step = 0.025 + Math.random() * 0.05;
 
-  for (let t = 0; t < Math.PI * 2; t += step) {
-    const x = this.x + scale * (16 * Math.pow(Math.sin(t), 3));
-    const y = this.y - scale * (
-      13 * Math.cos(t) -
-      5 * Math.cos(2 * t) -
-      2 * Math.cos(3 * t) -
-      Math.cos(4 * t)
-    );
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    particles.push(new Particle(x, y, color));
+    for (let t = 0; t < Math.PI * 2; t += step) {
+      const x = this.x + scale * (16 * Math.pow(Math.sin(t), 3));
+      const y = this.y - scale * (
+        13 * Math.cos(t) -
+        5 * Math.cos(2 * t) -
+        2 * Math.cos(3 * t) -
+        Math.cos(4 * t)
+      );
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      particles.push(new Particle(x, y, color));
+    }
   }
-}
 }
 
 let particles = [];
@@ -112,7 +112,7 @@ function launchRocket() {
   const targetY = Math.random() * (canvas.height / 2);
   rockets.push(new Rocket(targetX, targetY));
 
-  const delay = 800 + Math.random() * 2000; // เพิ่มจาก 500-2000 เป็น 800-2800
+  const delay = 800 + Math.random() * 2000;
   setTimeout(launchRocket, delay);
 }
 
@@ -127,7 +127,7 @@ document.getElementById("start").addEventListener("click", () => {
   fireworkSound.currentTime = 0;
   launchRocket();
   createStars();
-  // ลบ startHearts(); ออกจากตรงนี้
+  startPetalsAndLeaves();
 
   document.getElementById("start").style.display = "none";
   document.getElementById("noLove").style.display = "none";
@@ -160,10 +160,9 @@ document.getElementById("start").addEventListener("click", () => {
     setTimeout(() => {
       loveMessage.style.animation = "sway 1s infinite";
       
-      // 🔹 เพิ่มตรงนี้ - หัวใจเริ่มลอยหลังข้อความกลับมาแล้ว
       setTimeout(() => {
         startHearts();
-      }, 1000); // รอ 1 วิหลังข้อความโยกแล้ว
+      }, 1000);
       
     }, 2000);
   }, 16000);
@@ -238,9 +237,7 @@ document.addEventListener("mousemove", (e) => {
   mouseY = e.clientY;
 });
 animateNoLove();
-// 🔹 ฟองสบู่หัวใจ
-// สร้างดาวระยิบระยับ
-// สร้างดาวระยิบระยับ
+
 // สร้างดาวระยิบระยับ
 function createStars() {
   const container = document.getElementById("container");
@@ -251,7 +248,6 @@ function createStars() {
       const star = document.createElement("div");
       star.className = "star";
       
-      // สุ่มขนาด
       const size = Math.random();
       if (size > 0.7) {
         star.classList.add("big");
@@ -259,13 +255,11 @@ function createStars() {
         star.classList.add("medium");
       }
       
-      // สุ่มตำแหน่ง
       star.style.left = Math.random() * 100 + "%";
       star.style.top = Math.random() * 100 + "%";
       
       container.appendChild(star);
       
-      // เพิ่ม class show เพื่อเริ่ม animation
       setTimeout(() => {
         star.classList.add("show");
       }, 50);
@@ -274,6 +268,150 @@ function createStars() {
   }
 }
 
+// ฟังก์ชัน Random
+function R(min, max) {
+  return min + Math.random() * (max - min);
+}
+
+// สร้างกลีบดอกกุหลาบแบบ GSAP (ใช้รูปภาพ rose.png)
+function createPetal() {
+  const container = document.getElementById("container");
+  const petal = document.createElement("div");
+  petal.className = "falling-petal";
+  
+  const img = document.createElement("img");
+  img.src = "rose.png";
+  img.alt = "petal";
+  petal.appendChild(img);
+  
+  const startX = R(0, window.innerWidth);
+  const startY = R(-200, -150);
+  
+  petal.style.left = startX + "px";
+  petal.style.top = startY + "px";
+  
+  container.appendChild(petal);
+  
+  // Animation แบบ GSAP
+  const duration = R(6, 15);
+  const endY = window.innerHeight + 100;
+  const swayAmount = R(-100, 100);
+  const rotateX = R(0, 360);
+  const rotateY = R(0, 360);
+  const rotateZ = R(0, 180);
+  
+  petal.style.setProperty('--fall-duration', duration + 's');
+  petal.style.setProperty('--end-y', endY + 'px');
+  petal.style.setProperty('--sway-x', swayAmount + 'px');
+  petal.style.setProperty('--rotate-x', rotateX + 'deg');
+  petal.style.setProperty('--rotate-y', rotateY + 'deg');
+  petal.style.setProperty('--rotate-z', rotateZ + 'deg');
+  
+  petal.classList.add('animated');
+  
+  setTimeout(() => {
+    petal.remove();
+  }, duration * 1000 + 1000);
+}
+
+// สร้างดอกกุหลาบจากรูปภาพ
+// สร้างดอกกุหลาบจากรูปภาพ (สุ่ม 2 รูป)
+function createRose() {
+  const container = document.getElementById("container");
+  const rose = document.createElement("div");
+  rose.className = "falling-rose";
+  
+  const img = document.createElement("img");
+  
+  // สุ่มเลือกรูปภาพดอกไม้ 1 จาก 2 รูป
+  const roseImages = ["rose1.png", "rose2.png"]; // เปลี่ยนเป็นชื่อไฟล์รูปของคุณ
+  const randomRose = roseImages[Math.floor(Math.random() * roseImages.length)];
+  
+  img.src = randomRose;
+  img.alt = "rose";
+  rose.appendChild(img);
+  
+  const startX = R(0, window.innerWidth);
+  const startY = R(-200, -150);
+  
+  rose.style.left = startX + "px";
+  rose.style.top = startY + "px";
+  
+  container.appendChild(rose);
+  
+  const duration = R(7, 12);
+  const endY = window.innerHeight + 100;
+  const swayAmount = R(-100, 100);
+  const rotateZ = R(0, 360);
+  
+  rose.style.setProperty('--fall-duration', duration + 's');
+  rose.style.setProperty('--end-y', endY + 'px');
+  rose.style.setProperty('--sway-x', swayAmount + 'px');
+  rose.style.setProperty('--rotate-z', rotateZ + 'deg');
+  
+  rose.classList.add('animated');
+  
+  setTimeout(() => rose.remove(), duration * 1000 + 1000);
+}
+
+
+// สร้างใบไม้ลอย (ใช้รูปภาพ leaf.png)
+function createLeaf() {
+  const container = document.getElementById("container");
+  const leaf = document.createElement("div");
+  leaf.className = "falling-leaf";
+  
+  const img = document.createElement("img");
+  img.src = "leaf.png"; // ใช้รูปภาพใบไม้ที่คุณอัพโหลด
+  img.alt = "leaf";
+  leaf.appendChild(img);
+  
+  const startX = R(0, window.innerWidth);
+  const startY = R(-200, -150);
+  
+  leaf.style.left = startX + "px";
+  leaf.style.top = startY + "px";
+  
+  container.appendChild(leaf);
+  
+  const duration = R(6, 15);
+  const endY = window.innerHeight + 100;
+  const swayAmount = R(-100, 100);
+  const rotateX = R(0, 360);
+  const rotateY = R(0, 360);
+  const rotateZ = R(0, 360);
+  
+  leaf.style.setProperty('--fall-duration', duration + 's');
+  leaf.style.setProperty('--end-y', endY + 'px');
+  leaf.style.setProperty('--sway-x', swayAmount + 'px');
+  leaf.style.setProperty('--rotate-x', rotateX + 'deg');
+  leaf.style.setProperty('--rotate-y', rotateY + 'deg');
+  leaf.style.setProperty('--rotate-z', rotateZ + 'deg');
+  
+  leaf.classList.add('animated');
+  
+  setTimeout(() => {
+    leaf.remove();
+  }, duration * 1000 + 1000);
+}
+
+// ฟังก์ชันเริ่มกลีบและดอกไม้ลอย
+function startPetalsAndLeaves() {
+  const interval = setInterval(() => {
+    const rand = Math.random();
+    if (rand > 0.7) {
+      createPetal(); 
+    } else if (rand > 0.45) {
+      createRose(); 
+    } else if (rand > 0.2) {
+      createLeaf(); 
+    }
+  }, 800);
+  
+  /*setTimeout(() => {
+    clearInterval(interval);
+  }, 30000);*/
+}
 
 function launchHeart(element) {
   const startX = Math.random() * (window.innerWidth - 120);
@@ -292,37 +430,48 @@ function launchHeart(element) {
   setTimeout(() => {
     element.remove();
     createHeart();
-  }, 13000); /* เปลี่ยนจาก 6500 เป็น 13000 (12 วินาที + buffer) */
+  }, 13000);
 }
 
 function createHeart() {
   const container = document.getElementById("container");
   
-  // สุ่มว่าจะเป็นรูปภาพหรือ div หัวใจ
-  const isImage = Math.random() > 0.65; // 50% โอกาส
+  const isImage = Math.random() > 0.65;
   
   if (isImage) {
-    // สร้างเป็นรูปภาพ
-    const images = ["couple1.jpg", "couple2.jpg", "couple3.jpg", "couple4.jpg", "couple5.jpg"]; // เพิ่มชื่อรูปที่มี
+    // ใช้ div หุ้มรูปคน
+    const heartWrapper = document.createElement("div");
+    heartWrapper.className = "heart heart-photo";
+    
+    const images = ["couple1.jpg", "couple2.jpg", "couple3.jpg", "couple4.jpg", "couple5.jpg"];
     const randomImage = images[Math.floor(Math.random() * images.length)];
     
-    const heart = document.createElement("img");
-    heart.src = randomImage;
-    heart.className = "heart";
-    container.appendChild(heart);
-    launchHeart(heart);
+    heartWrapper.style.backgroundImage = `url('${randomImage}')`;
+    heartWrapper.style.backgroundSize = 'cover';
+    heartWrapper.style.backgroundPosition = 'center';
+    
+    container.appendChild(heartWrapper);
+    launchHeart(heartWrapper);
   } else {
-    // สร้างเป็น div หัวใจ
+    // สุ่มสีหัวใจ
     const heart = document.createElement("div");
-    heart.className = "heart";
+    heart.className = "heart heart-svg";
+    
+    const colors = ["#ff4d6d", "#ff99cc", "#cc33ff", "#ff0000", "#ff69b4"];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    
+    heart.innerHTML = `
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50,90 C50,90 10,60 10,35 C10,20 20,10 30,10 C40,10 45,15 50,25 C55,15 60,10 70,10 C80,10 90,20 90,35 C90,60 50,90 50,90 Z" fill="${randomColor}"/>
+      </svg>
+    `;
     container.appendChild(heart);
     launchHeart(heart);
   }
 }
 
-// เริ่มทำงานเฉพาะตอนกดปุ่ม
 function startHearts() {
-  for (let i = 0; i < 3; i++) { // เพิ่มจาก 5 เป็น 10 ดวง
+  for (let i = 0; i < 3; i++) {
     setTimeout(() => {
       createHeart();
     }, i * 800);
