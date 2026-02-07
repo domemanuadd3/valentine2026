@@ -131,6 +131,8 @@ document.getElementById("start").addEventListener("click", () => {
   startPetalsAndLeaves();
   startPlanets();
   startShootingStars();
+  startUFOs();
+  startAliens();
 
   document.getElementById("start").style.display = "none";
   document.getElementById("noLove").style.display = "none";
@@ -772,6 +774,265 @@ function startShootingStars() {
     }
   }, 8000 + Math.random() * 17000);
 }
+
+// ตัวแปรเก็บประวัติยาน
+let ufoHistory = [];
+
+// สร้างยานอวกาศ UFO
+function createUFO() {
+  const container = document.getElementById("container");
+  const ufo = document.createElement("div");
+  ufo.className = "ufo";
+  
+  const img = document.createElement("img");
+  img.src = "ufo.png"; // ใส่ชื่อไฟล์รูป UFO ที่อัพโหลด
+  img.alt = "UFO";
+  ufo.appendChild(img);
+  
+  // สุ่มขนาด
+  const size = 60 + Math.random() * 40; // 60-100px
+  ufo.style.width = size + "px";
+  
+  // สุ่มทิศทาง (4 ทิศ)
+  const directions = [
+    { // ซ้าย -> ขวา (กลางจอ)
+      startLeft: "-120px",
+      startTop: (30 + Math.random() * 40) + "%",
+      endLeft: "calc(100% + 120px)",
+      endTop: (25 + Math.random() * 50) + "%"
+    },
+    { // ขวา -> ซ้าย (กลางจอ)
+      startLeft: "calc(100% + 120px)",
+      startTop: (30 + Math.random() * 40) + "%",
+      endLeft: "-120px",
+      endTop: (25 + Math.random() * 50) + "%"
+    },
+    { // บน -> ล่าง (เฉียง)
+      startLeft: (20 + Math.random() * 60) + "%",
+      startTop: "-120px",
+      endLeft: (15 + Math.random() * 70) + "%",
+      endTop: "calc(100% + 120px)"
+    },
+    { // ล่าง -> บน (เฉียง)
+      startLeft: (20 + Math.random() * 60) + "%",
+      startTop: "calc(100% + 120px)",
+      endLeft: (15 + Math.random() * 70) + "%",
+      endTop: "-120px"
+    }
+  ];
+  
+  // กรองทิศทางที่ไม่อยู่ใน history
+  let availableDirections = directions.filter((_, index) => !ufoHistory.includes(index));
+  
+  if (availableDirections.length === 0) {
+    ufoHistory = [];
+    availableDirections = directions;
+  }
+  
+  const dirIndex = Math.floor(Math.random() * availableDirections.length);
+  const actualIndex = directions.indexOf(availableDirections[dirIndex]);
+  const direction = directions[actualIndex];
+  
+  // เพิ่มทิศทางเข้า history
+  ufoHistory.push(actualIndex);
+  if (ufoHistory.length > 2) {
+    ufoHistory.shift();
+  }
+  
+  // ตั้งค่าตำแหน่งเริ่มต้น
+  ufo.style.left = direction.startLeft;
+  ufo.style.top = direction.startTop;
+  
+  container.appendChild(ufo);
+  
+  // สุ่มความเร็ว (ช้ากว่าดาวเคราะห์)
+  const duration = 15 + Math.random() * 10; // 15-25 วินาที
+  
+  // Animation หลัก (เคลื่อนที่)
+  ufo.animate([
+    {
+      left: direction.startLeft,
+      top: direction.startTop,
+      opacity: 0,
+      transform: "scale(0.5)"
+    },
+    {
+      opacity: 0.3,
+      transform: "scale(0.7)",
+      offset: 0.1
+    },
+    {
+      opacity: 1,
+      transform: "scale(1)",
+      offset: 0.3
+    },
+    {
+      opacity: 1,
+      transform: "scale(1)",
+      offset: 0.7
+    },
+    {
+      opacity: 0.3,
+      transform: "scale(0.7)",
+      offset: 0.9
+    },
+    {
+      left: direction.endLeft,
+      top: direction.endTop,
+      opacity: 0,
+      transform: "scale(0.5)"
+    }
+  ], {
+    duration: duration * 1000,
+    easing: "ease-in-out",
+    fill: "forwards"
+  });
+  
+  // เพิ่ม animation ลอยขึ้นลง
+  ufo.style.animation = `ufoFloat 2s ease-in-out infinite`;
+  
+  // ลบหลังจบ
+  setTimeout(() => {
+    ufo.remove();
+  }, duration * 1000 + 1000);
+}
+
+// เริ่มระบบยาน UFO
+function startUFOs() {
+  // สร้างยานแรก
+  setTimeout(() => {
+    createUFO();
+  }, 10000); // รอ 10 วินาที
+  
+  // สุ่มสร้างยานทุกๆ 40-70 วินาที
+  setInterval(() => {
+    if (Math.random() > 0.2) { // 60% โอกาสเกิด
+      createUFO();
+    }
+  }, 25000 + Math.random() * 15000);
+}
+
+// สร้างเอเลี่ยนโผล่ทุกจุดรอบขอบ - หัวออกตรงข้าม
+function createAlien() {
+  const alien = document.createElement("div");
+  alien.className = "alien";
+  
+  const img = document.createElement("img");
+  img.src = "alien.png";
+  img.alt = "Alien";
+  alien.appendChild(img);
+  
+  // สุ่มตำแหน่งรอบขอบ (หลบกลางล่าง)
+  const positions = [
+    // ซ้ายล่าง - หัวออกขวา (หมุน 90°)
+    { left: "0", bottom: "5%", rotate: 90, hideAmount: 30, axis: "X", direction: -1 },
+    { left: "0", bottom: "15%", rotate: 90, hideAmount: 30, axis: "X", direction: -1 },
+    
+    // ขวาล่าง - หัวออกซ้าย (หมุน -90°)
+    { right: "0", bottom: "5%", rotate: -90, hideAmount: 30, axis: "X", direction: 1 },
+    { right: "0", bottom: "15%", rotate: -90, hideAmount: 30, axis: "X", direction: 1 },
+    
+    // ซ้ายบน - หัวออกขวา (หมุน 90°)
+    { left: "0", top: "5%", rotate: 90, hideAmount: 30, axis: "X", direction: -1 },
+    { left: "0", top: "15%", rotate: 90, hideAmount: 30, axis: "X", direction: -1 },
+    
+    // ขวาบน - หัวออกซ้าย (หมุน -90°)
+    { right: "0", top: "5%", rotate: -90, hideAmount: 30, axis: "X", direction: 1 },
+    { right: "0", top: "15%", rotate: -90, hideAmount: 30, axis: "X", direction: 1 },
+    
+    // ซ้ายกลาง - หัวออกขวา (หมุน 90°)
+    { left: "0", top: "30%", rotate: 90, hideAmount: 30, axis: "X", direction: -1 },
+    { left: "0", top: "45%", rotate: 90, hideAmount: 30, axis: "X", direction: -1 },
+    { left: "0", top: "60%", rotate: 90, hideAmount: 30, axis: "X", direction: -1 },
+    
+    // ขวากลาง - หัวออกซ้าย (หมุน -90°)
+    { right: "0", top: "30%", rotate: -90, hideAmount: 30, axis: "X", direction: 1 },
+    { right: "0", top: "45%", rotate: -90, hideAmount: 30, axis: "X", direction: 1 },
+    { right: "0", top: "60%", rotate: -90, hideAmount: 30, axis: "X", direction: 1 },
+  ];
+  
+  const pos = positions[Math.floor(Math.random() * positions.length)];
+  
+  // ตั้งตำแหน่ง
+  if (pos.left !== undefined) alien.style.left = pos.left;
+  if (pos.right !== undefined) alien.style.right = pos.right;
+  if (pos.top !== undefined) alien.style.top = pos.top;
+  if (pos.bottom !== undefined) alien.style.bottom = pos.bottom;
+  
+  // หมุนรูปภาพตามทิศทาง
+  img.style.transform = `rotate(${pos.rotate}deg)`;
+  
+  // กำหนด transform สำหรับโผล่ (ทุกอันเป็น X เพราะโผล่จากซ้าย-ขวา)
+  const startTransform = `translateX(${pos.direction * 100}%)`;
+  const peekTransform = `translateX(${pos.direction * pos.hideAmount}%)`;
+  
+  alien.style.transform = startTransform;
+  
+  document.body.appendChild(alien);
+  
+  // Animation โผล่
+  alien.animate([
+    {
+      transform: startTransform,
+      opacity: 0
+    },
+    {
+      transform: peekTransform,
+      opacity: 1,
+      offset: 0.15
+    },
+    {
+      transform: peekTransform,
+      opacity: 1,
+      offset: 0.85
+    },
+    {
+      transform: startTransform,
+      opacity: 0
+    }
+  ], {
+    duration: 8000,
+    easing: "ease-in-out",
+    fill: "forwards"
+  });
+  
+  // Animation โบกมือ
+  let waveAngle = 0;
+  const waveInterval = setInterval(() => {
+    waveAngle += 0.15;
+    const waveRotation = Math.sin(waveAngle) * 8;
+    alien.style.transform = `${peekTransform} rotate(${waveRotation}deg)`;
+    img.style.transform = `rotate(${pos.rotate}deg)`;
+  }, 50);
+  
+  // หยุดโบกก่อนหาย
+  setTimeout(() => {
+    clearInterval(waveInterval);
+  }, 6800);
+  
+  // ลบหลังจบ
+  setTimeout(() => {
+    clearInterval(waveInterval);
+    alien.remove();
+  }, 9000);
+}
+
+// เริ่มระบบเอเลี่ยน
+function startAliens() {
+  // โผล่ครั้งแรก
+  setTimeout(() => {
+    createAlien();
+  }, 25000); // หลังกดปุ่ม 20 วินาที
+  
+  // สุ่มโผล่ทุกๆ 45-75 วินาที
+  setInterval(() => {
+    if (Math.random() > 0.2) { // 70% โอกาส
+      createAlien();
+    }
+  }, 20000 + Math.random() * 15000);
+}
+
+
 function startPlanets() {
   createPlanet(); // สร้างดวงแรกทันที
   
